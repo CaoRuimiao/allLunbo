@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>整屏轮播</title>
+    <style>
+        /*公共样式*/
+        html,body{padding:0;margin:0;color:#414242;}
+        ul,li{padding:0;margin:0;}
+        a { color: #414242; text-decoration: none; }
+        /*a:hover { color: #cd0200; text-decoration: underline; }*/
+        li { list-style: none; }
+        img { border: 0; vertical-align: middle; }
+        p { margin:0;word-wrap: break-word; }
+
+        .clearfix:before, .clearfix:after { content: ""; display: block; }
+        .clearfix:after { clear: both; }
+        .fl { float: left; }
+        .fr { float: right; }
+
+        /*整屏轮播*/
+        .btn-box{width:240px;margin:10px auto;}
+        .left,.right{width:80px;height:40px;line-height: 40px;margin:20px;}
+        .content{width:915px;height:162px;margin:0 auto;border:1px solid #000;overflow:hidden;}
+        .content .item{width:1830px;height:162px;text-align: center;line-height: 160px;font-size: 26px;position: relative;}
+        .content .item ul{width:915px;height:162px;position:absolute;top:0;}
+        .content .item ul li{width:200px;height:140px;padding:10px;margin:0 3px;border:1px solid #ff0000;}
+    </style>
+</head>
+<body>
+<!--整屏轮播-->
+<div class="btn-box clearfix">
+    <input type="button" value="left" class="left fl">
+    <input type="button" value="right" class="right fl">
+</div>
+<div class="content">
+    <div class="item">
+        <ul class="clearfix">
+            <li class="fl">1</li>
+            <li class="fl">2</li>
+            <li class="fl">3</li>
+            <li class="fl">4</li>
+        </ul>
+        <ul class="clearfix">
+            <li class="fl">5</li>
+            <li class="fl">6</li>
+            <li class="fl">7</li>
+            <li class="fl">8</li>
+        </ul>
+    </div>
+</div>
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
+    var contentItem=$(".content .item");
+    var contentItemUl=$(".content .item ul");
+    var ulCount=contentItemUl.length;
+    var leftBtn=$(".btn-box .left");
+    var rightBtn=$(".btn-box .right");
+    var tempIndex=0;
+    contentItemUl.each(function(i){
+        $(this).css('left', i * $(this).outerWidth());
+    });
+
+
+    var leftFlag=true;   
+    var rightFlag=true;
+    leftBtn.click(function(){
+        if(!leftFlag) return false;
+        else leftFlag=false;
+        contentItem.prepend($(".content .item ul:last"));
+        $(".content .item ul:first").css("left",-$(".content .item ul:last").outerWidth());
+        contentItemUl.each(function(){
+            $(this).animate({
+                left:parseInt($(this).css('left')) + $(this).outerWidth()
+            },function(){
+                tempIndex++;
+                if(tempIndex>=ulCount){
+                    tempIndex=0;
+                    leftFlag=true;
+                }
+            });
+        });
+    });
+    rightBtn.click(function(){
+        if(!rightFlag)return;
+        else rightFlag=false;
+        contentItemUl.each(function(){
+            $(this).animate({
+                left:parseInt($(this).css('left'))-$(this).outerWidth()
+            },function(){
+                tempIndex++;
+                if(tempIndex>=ulCount){
+                    tempIndex=0;
+                    rightFlag=true;
+                    contentItem.append($(".content .item ul:first"));
+                    $(".content .item ul:last").css("left",$(".content .item ul:first").outerWidth());
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

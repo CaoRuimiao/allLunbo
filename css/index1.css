@@ -1,0 +1,8 @@
+
+
+
+
+
+
+.section{width:1000px;height:500px;padding:50px 0;border:1px solid #000;border-radius: 10px;box-shadow: 5px 5px 10px #000;position:relative;}
+.section .block{width:100px;height:100px;background: #000;position:absolute;}

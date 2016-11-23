@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>小轮播</title>
+    <style>
+        /*公共样式*/
+        html,body{padding:0;margin:0;color:#414242;}
+        ul,li{padding:0;margin:0;}
+        a { color: #414242; text-decoration: none; }
+        /*a:hover { color: #cd0200; text-decoration: underline; }*/
+        li { list-style: none; }
+        img { border: 0; vertical-align: middle; }
+        p { margin:0;word-wrap: break-word; }
+
+        .clearfix:before, .clearfix:after { content: ""; display: block; }
+        .clearfix:after { clear: both; }
+        .fl { float: left; }
+        .fr { float: right; }
+
+        /*小轮播*/
+        .btn-box{width:240px;margin:10px auto;}
+        .left,.right{width:80px;height:40px;line-height: 40px;margin:20px;}
+        .content{width:906px;height:162px;margin:0 auto;border:1px solid #000;overflow:hidden;}
+        .content ul{width:1796px;height:162px;text-align: center;line-height: 160px;font-size: 26px;position: relative;}
+        .content ul li{width:200px;height:140px;padding:10px;border:1px solid #ff0000;position: absolute;}
+    </style>
+</head>
+<body>
+<!--小轮播-->
+<div class="btn-box clearfix">
+    <input type="button" value="left" class="left fl">
+    <input type="button" value="right" class="right fl">
+</div>
+<div class="content">
+    <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+    </ul>
+</div>
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
+    //小轮播
+    var contentUl=$(".content ul");
+    var contentUlLi=$(".content ul li");
+    var leftBtn=$(".left");
+    var rightBtn=$(".right");
+    var marginValue=6;  //左、右的间隔
+
+    //并没有完全封装  $(".content ul li:first") 和 $(".content ul li:last") 还需要手动修改
+    var smallLunbo=function(ulArea,ulLiArea,leftBtn,rightBtn,marginValue){
+        ulLiArea.each(function (i) {
+            $(this).css('left', i * ($(this).outerWidth()+ marginValue));
+        });
+        var tempIndex=0;
+        var leftFlag=true;
+        var rightFlag=true;
+        leftBtn.click(function(){
+            if(!leftFlag) return false;
+            else leftFlag=false;
+            ulArea.prepend($(".content ul li:last"));
+            $(".content ul li:first").css("left",-($(".content ul li:last").outerWidth()+ marginValue));
+            ulLiArea.each(function(){
+                $(this).animate({
+                    left: parseInt($(this).css('left')) + $(this).outerWidth()+ marginValue
+                },function(){
+                    tempIndex++;
+                    if(tempIndex>=ulLiArea.length){
+                        tempIndex=0;
+                        leftFlag=true;
+                    }
+                })
+            });
+        });
+        rightBtn.click(function(){
+            if(!rightFlag) return false;
+            else rightFlag=false;
+            ulLiArea.each(function(){
+                $(this).animate({
+                    left: parseInt($(this).css('left')) - $(this).outerWidth()- marginValue
+                },function(){
+                    tempIndex++;
+                    if (tempIndex >= ulLiArea.length) {
+                        tempIndex = 0;
+                        rightFlag=true;
+                        ulArea.append($(".content ul li:first"));
+                        $(".content ul li:last").css("left",($(".content ul li:first").outerWidth()+ marginValue )* ($('.content ul li').length - 1));
+                    }
+                });
+            });
+        });
+    };
+    smallLunbo(contentUl,contentUlLi,leftBtn,rightBtn,marginValue);
+</script>
+</body>
+</html>
